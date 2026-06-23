@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/Authcontext';
 
 const EmployeeDashboard = ({ changeUser, data }) => {
   const { updateTaskStatus } = useContext(AuthContext);
+  const [filterCategory, setFilterCategory] = useState('All');
 
   const logOutUser = () => {
     localStorage.removeItem('loggedInUser');
@@ -12,6 +13,15 @@ const EmployeeDashboard = ({ changeUser, data }) => {
   const handleStatusChange = (taskIndex, statusType) => {
     updateTaskStatus(data.id, taskIndex, statusType);
   };
+
+  // Get unique categories
+  const categories = ['All', ...new Set(data?.tasks?.map(t => t.category) || [])];
+
+  // Filter tasks based on selected category
+  const filteredTasks = data?.tasks?.filter(task => {
+    if (filterCategory === 'All') return true;
+    return task.category === filterCategory;
+  });
 
   return (
     <div className='employee-layout-container employee-theme'>
@@ -55,9 +65,33 @@ const EmployeeDashboard = ({ changeUser, data }) => {
           </div>
         </div>
 
-        <h2 className='section-title' style={{marginTop: '2rem', marginBottom: '1.5rem'}}>Your Task Board</h2>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', marginBottom: '1.5rem'}}>
+          <h2 className='section-title' style={{margin: 0}}>Your Task Board</h2>
+          
+          <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+            <span style={{color: 'var(--text-muted)', fontWeight: '600'}}>Filter by Category:</span>
+            <select 
+              value={filterCategory} 
+              onChange={(e) => setFilterCategory(e.target.value)}
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                color: 'white',
+                border: '1px solid var(--glass-border)',
+                padding: '0.6rem 1rem',
+                borderRadius: '8px',
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {categories.map((cat, idx) => (
+                <option key={idx} value={cat} style={{background: '#0f172a'}}>{cat}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <div className='task-masonry'>
-          {data?.tasks?.map((task, idx) => (
+          {filteredTasks?.length > 0 ? filteredTasks.map((task, idx) => (
             <div key={idx} className={`emp-task-card ${task.active ? 'active' : task.completed ? 'completed' : task.failed ? 'failed' : 'new'}`}>
               <div className='task-header'>
                 <span className='task-category'>{task.category}</span>
@@ -69,12 +103,12 @@ const EmployeeDashboard = ({ changeUser, data }) => {
               <div className='task-actions'>
                 {task.active && !task.completed && !task.failed && (
                   <>
-                    <button className='btn-complete' onClick={() => handleStatusChange(idx, 'complete')}>Mark Completed</button>
-                    <button className='btn-failed' onClick={() => handleStatusChange(idx, 'fail')}>Mark Failed</button>
+                    <button className='btn-complete' onClick={() => handleStatusChange(data.tasks.indexOf(task), 'complete')}>Mark Completed</button>
+                    <button className='btn-failed' onClick={() => handleStatusChange(data.tasks.indexOf(task), 'fail')}>Mark Failed</button>
                   </>
                 )}
                 {task.newTask && !task.active && (
-                   <button className='btn-accept' onClick={() => handleStatusChange(idx, 'accept')}>Accept Task</button>
+                   <button className='btn-accept' onClick={() => handleStatusChange(data.tasks.indexOf(task), 'accept')}>Accept Task</button>
                 )}
                 {(task.completed || task.failed) && (
                   <div className='status-msg'>
@@ -83,7 +117,9 @@ const EmployeeDashboard = ({ changeUser, data }) => {
                 )}
               </div>
             </div>
-          ))}
+          )) : (
+            <p style={{color: 'var(--text-muted)'}}>No tasks found for this category.</p>
+          )}
         </div>
       </div>
     </div>

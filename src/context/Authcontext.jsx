@@ -12,6 +12,18 @@ const AuthProvider = ({ children }) => {
     const { employees, admin } = getLocalStorage();
     setUserData(employees);
     setAdminData(admin);
+
+    // Listen for changes across different tabs/windows to sync instantly
+    const handleStorageChange = (e) => {
+      if (e.key === 'employees' && e.newValue) {
+        setUserData(JSON.parse(e.newValue));
+      } else if (e.key === 'admin' && e.newValue) {
+        setAdminData(JSON.parse(e.newValue));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const addEmployee = (name, email, password) => {

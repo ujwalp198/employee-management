@@ -170,7 +170,79 @@ ADMIN THEME: Sidebar Console (Indigo/Slate)
 .admin-profile { display: flex; align-items: center; gap: 1rem; background: var(--glass-bg); padding: 0.5rem 0.5rem 0.5rem 1.5rem; border-radius: 30px; border: 1px solid var(--glass-border); font-weight: 600;}
 .admin-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-indigo); display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);}
 
-.admin-content-grid { display: flex; flex-direction: column; gap: 3rem; }
+.admin-content-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* --- Admin Analytics --- */
+.admin-analytics-wrapper {
+  margin-bottom: 1rem;
+}
+
+.admin-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.analytics-card {
+  padding: 1.5rem;
+  border-left: 4px solid var(--primary);
+}
+
+.analytics-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.analytics-id {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.analytics-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0,0,0,0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+}
+
+.stat-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+
+.text-new { color: var(--accent-blue); }
+.text-active { color: var(--accent-yellow); }
+.text-completed { color: var(--accent-green); }
+.text-failed { color: var(--accent-red); }
+
+/* --- Admin Create Task --- */
 .admin-card { 
   background: var(--glass-bg); 
   backdrop-filter: blur(20px);
